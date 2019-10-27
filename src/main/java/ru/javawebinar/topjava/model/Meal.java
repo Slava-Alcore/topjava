@@ -1,19 +1,48 @@
 package ru.javawebinar.topjava.model;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import org.hibernate.validator.constraints.Range;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+
+@NamedQueries({
+        @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.id=:id and m.user.id=:userid"),
+        @NamedQuery(name = Meal.GET_ALL, query = "SELECT m FROM Meal m LEFT JOIN FETCH m.user WHERE m.user.id=:userid ORDER BY m.dateTime desc"),
+        @NamedQuery(name = Meal.GET, query = "SELECT m FROM Meal m LEFT JOIN FETCH m.user WHERE m.user.id=:userid and m.id=:id"),
+        @NamedQuery(name = Meal.GET_ALL_BETWEEN_DATES, query = "SELECT m FROM Meal m LEFT JOIN FETCH m.user"+
+                " WHERE m.user.id=:userid and m.dateTime between :startdate and :enddate ORDER BY m.dateTime desc"),
+})
+@Entity
+@Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = "date_time",name = "meals_unique_user_date_idx")})
 public class Meal extends AbstractBaseEntity {
+
+    public static final String DELETE = "Meal.delete";
+    public static final String GET_ALL = "Meal.getAll";
+    public static final String GET = "Meal.get";
+    public static final String GET_ALL_BETWEEN_DATES = "Meal.getAllBetweenDates";
+
+    @Column(name = "date_time",nullable = false, columnDefinition = "timestamp")
+    @NotNull
     private LocalDateTime dateTime;
 
+    @Column(name = "description",nullable = false)
+    @NotBlank
     private String description;
 
+    @Column(name = "calories",nullable = false)
+    @Range(min = 10, max = 10000)
     private int calories;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "user_id")
+    @CollectionTable(name = "users", joinColumns = @JoinColumn(name = "id"))
+    @NotNull
     private User user;
 
     public Meal() {
@@ -28,6 +57,14 @@ public class Meal extends AbstractBaseEntity {
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
+    }
+
+    public Meal(Integer id, LocalDateTime dateTime, String description, int calories,User user) {
+        super(id);
+        this.dateTime = dateTime;
+        this.description = description;
+        this.calories = calories;
+        this.user=user;
     }
 
     public LocalDateTime getDateTime() {
