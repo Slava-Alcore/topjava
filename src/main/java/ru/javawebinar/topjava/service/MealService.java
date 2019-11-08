@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,8 +17,15 @@ public class MealService {
 
     private final MealRepository repository;
 
-    public MealService(MealRepository repository) {
+    public MealService(MealRepository repository, UserRepository userRepository) {
         this.repository = repository;
+        this.userRepository = userRepository;
+    }
+
+    private final UserRepository userRepository;
+
+    public List<Meal> getMealsByUserId (int userId){
+        return userRepository.get(userId).getUserMeals();
     }
 
     public Meal get(int id, int userId) {
