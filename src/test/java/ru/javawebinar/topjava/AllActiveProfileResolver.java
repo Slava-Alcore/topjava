@@ -1,4 +1,4 @@
-﻿package ru.javawebinar.topjava;
+package ru.javawebinar.topjava;
 
 import org.springframework.test.context.ActiveProfilesResolver;
 

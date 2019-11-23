@@ -1,4 +1,4 @@
-﻿package ru.javawebinar.topjava.service;
+package ru.javawebinar.topjava.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
