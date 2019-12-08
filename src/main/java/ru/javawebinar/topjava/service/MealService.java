@@ -1,17 +1,22 @@
 package ru.javawebinar.topjava.service;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
-@Service
+@Service("mealService")
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class MealService {
 
     private final MealRepository repository;
@@ -38,7 +43,15 @@ public class MealService {
 
     public void update(Meal meal, int userId) {
         Assert.notNull(meal, "meal must not be null");
-        checkNotFoundWithId(repository.save(meal, userId), meal.getId());
+        //checkNotFoundWithId(
+        repository.save(meal, userId);//, meal.getId());
+    }
+
+    public void update(MealTo mealTo, int userId) {
+        //Assert.notNull(mealTo, "meal must not be null");
+        //checkNotFoundWithId(
+        Meal meal = get(mealTo.getId(),userId);
+        repository.save(MealsUtil.updateFromTo(meal,mealTo), userId);//, mealTo.getId());
     }
 
     public Meal create(Meal meal, int userId) {
