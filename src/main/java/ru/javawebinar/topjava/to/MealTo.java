@@ -14,21 +14,21 @@ import java.util.Objects;
 public class MealTo extends BaseTo implements Serializable {
 
     @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dateTime;
 
     @NotBlank
-    @Size(min = 5, max = 150)
+    @Size(max = 150)
     private String description;
 
     @Range(min = 10, max = 10000)
     @NotNull
     private Integer calories;
 
-    @NotNull
-    private Boolean excess=false;
+    private Boolean excess;
 
     @ConstructorProperties({"id", "dateTime", "description", "calories", "excess"})
-    public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
+    public MealTo(Integer id, LocalDateTime dateTime, String description, Integer calories, Boolean excess) {
         super(id);
         this.dateTime = dateTime;
         this.description = description;
@@ -44,10 +44,6 @@ public class MealTo extends BaseTo implements Serializable {
         this.description = description;
     }
 
-    public void setCalories(int calories) {
-        this.calories = calories;
-    }
-
     public LocalDateTime getDateTime() {
         return dateTime;
     }
@@ -56,12 +52,20 @@ public class MealTo extends BaseTo implements Serializable {
         return description;
     }
 
-    public int getCalories() {
+    public Integer getCalories() {
         return calories;
     }
 
-    public boolean isExcess() {
+    public Boolean isExcess() {
         return excess;
+    }
+
+    public void setCalories(Integer calories) {
+        this.calories = calories;
+    }
+
+    public void setExcess(Boolean excess) {
+        this.excess = excess;
     }
 
     @Override

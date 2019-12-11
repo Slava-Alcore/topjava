@@ -46,6 +46,7 @@ $(function () {
                         "data": "enabled",
                         "render": function (data, type, row) {
                             if (type === "display") {
+                                debugger
                                 return "<input type='checkbox' " + (data ? "checked" : "") + " onclick='enable($(this)," + row.id + ");'/>";
                             }
                             return data;
