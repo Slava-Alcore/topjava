@@ -70,4 +70,21 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
         USER_MATCHERS.assertMatch(userService.get(USER_ID), UserUtil.updateFromTo(new User(USER), updatedTo));
     }
+
+    @Test
+    void registerNotValid() throws Exception {
+        UserTo newTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword", 0);
+        perform(doPost("/register").jsonBody(newTo))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void updateNotValid() throws Exception {
+        UserTo updatedTo = new UserTo(USER_ID, "newName", "newemail@ya.ru", "newPassword", 0);
+        perform(doPut().jsonBody(updatedTo).basicAuth(USER))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+
+    }
 }

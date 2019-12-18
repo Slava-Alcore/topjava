@@ -119,4 +119,22 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
         assertFalse(userService.get(USER_ID).isEnabled());
     }
+
+    @Test
+    void createWithLocationNotValid() throws Exception {
+        User newUser = UserTestData.getNew();
+        newUser.setCaloriesPerDay(0);
+        perform(doPost().jsonUserWithPassword(newUser).basicAuth(ADMIN))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void createWithLocationDuplicateEmail() throws Exception {
+        User newUser = UserTestData.getNew();
+        newUser.setEmail("user@yandex.ru");
+        perform(doPost().jsonUserWithPassword(newUser).basicAuth(ADMIN))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
 }
